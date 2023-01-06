@@ -1,0 +1,7 @@
+<%= form_with model: post, url: path, class: 'mb-3' do |form| %>
+  <div class="form-floating mt-1">
+    <%= form.text_field :content, class: "form-control", id: "floatingTextarea2", placeholder: "Add Comments" %>
+    <%= form.label :Add_Comments, for: "floatingTextarea2" %>
+    <span class="text-danger"><%= post.errors.full_messages_for(:content).join(", ") if post.errors.has_key?(:content) %></span>
+  </div>
+<% end %>

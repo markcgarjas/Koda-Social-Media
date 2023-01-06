@@ -1,0 +1,16 @@
+<section class="mt-5 mt-sm-5 mt-md-5 mt-lg-5 mt-xl-5 mt-xxl-5 mb-5">
+  <div class="container text-center" style="width: 40%;">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <div class="card-header">
+          <h3 class="text-center border bg-warning p-2"><%= link_to "", post_path(@post), class: 'float-end btn btn-sm border border-1 bi bi-x-circle' %>Edit Comment</h3>
+        </div>
+        <div class="card shadow-lg rounded-3">
+          <div class="card-body bg-light">
+            <%= render partial: 'edit_form', locals: { comment: @comment, path: post_comment_path(@post) } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

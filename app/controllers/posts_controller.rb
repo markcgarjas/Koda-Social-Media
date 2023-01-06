@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:edit, :update, :destroy]
+  before_action :set_post, only: [:edit, :show, :update, :destroy]
+  before_action :authenticate_user!, except: [:index]
 
   def index
     @posts = Post.all
@@ -23,9 +24,14 @@ class PostsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    authorize @post, :edit?, policy_class: PostPolicy
+  end
+
+  def show; end
 
   def update
+    authorize @post, :update?, policy_class: PostPolicy
     @post.update(post_params)
     @post.user = current_user
     if @post.save
@@ -37,6 +43,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    authorize @post, :destroy?, policy_class: PostPolicy
     if @post.destroy
       flash[:notice] = "Post delete successfully"
       redirect_to posts_path

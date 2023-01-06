@@ -8,7 +8,7 @@
         <% if user_signed_in? %>
           <div class="text-center" style="width: 100%;">
             <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              <%= "Whats on your mind,#{current_user.email}" %>
+              <%= "Whats on your mind,#{pundit_user.email}" %>
             </button>
           </div>
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -42,29 +42,40 @@
               <div class="btn-group float-end">
                 <button type="button" class="btn border border-1 btn-sm bi-three-dots" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                 </button>
-                <% if current_user %>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu">
-                    <%= link_to "Edit", edit_post_path(post), class: 'bi bi-pen btn-sm btn dropdown-item' %>
-                    <%= button_to "Delete", post_path(post), { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } %>
-                  </ul>
-                <% end %>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu">
+                  <%= link_to "Show Post", post_path(post), class: 'bi bi-eye btn-sm btn dropdown-item' %>
+                  <%= link_to "Edit Post", edit_post_path(post), class: 'bi bi-pen btn-sm btn dropdown-item' if policy(post).edit? %>
+                  <%= button_to "Delete Post", post_path(post), { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } if policy(post).destroy? %>
+                </ul>
               </div>
               <div>
                 <%= post.user.email %><br>
                 <span><%= time_ago_in_words(post.created_at) %></span>
-                <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title=<%= post.audience %>>
-                  <span class="bi bi-people"></span>
+                <% if post.public_post? %>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= post.audience %>">
+                  <span class="bi bi-globe-americas"></span>
                 </span>
+                <% end %>
+                <% if post.private_post? %>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= post.audience %>">
+                  <span class="bi bi-lock-fill"></span>
+                </span>
+                <% end %>
+                <% if post.friends_only? %>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= post.audience %>">
+                  <span class="bi bi-people-fill"></span>
+                </span>
+                <% end %>
                 <% if post.location? %>
-                <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= Geocoder.search(post.location).first&.city %> <%= Geocoder.search(post.location).first&.region %>, <%= Geocoder.search(post.location).first&.country %>">
+                  <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= Geocoder.search(post.location).first&.city %> <%= Geocoder.search(post.location).first&.region %>, <%= Geocoder.search(post.location).first&.country %>">
                   <span class="bi bi-geo-alt-fill"></span>
-                </span>
+                  </span>
                 <% end %>
               </div>
               <hr>
               <h4 class="text-success"><%= post.text %></h4>
               <div class="text-center">
-                <%= image_tag post.image.url, class: 'w-100 cover', height: "400" if post.image? %>
+                <%= image_tag post.image.url, class: 'w-100', height: "400" if post.image? %>
               </div>
             </div>
           </div>

@@ -1,0 +1,7 @@
+<%= form_with model: comment, url: path, class: 'mb-3' do |form| %>
+  <div class="mt-1">
+    <%= form.label 'Edit Comment', class: 'form-label'%>
+    <%= form.text_field :content, class: "form-control", placeholder: "Add Comments" %>
+    <span class="text-danger"><%= comment.errors.full_messages_for(:content).join(", ") if comment.errors.has_key?(:content) %></span>
+  </div>
+<% end %>
