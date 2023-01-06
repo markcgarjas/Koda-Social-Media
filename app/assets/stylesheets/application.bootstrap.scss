@@ -1,2 +1,10 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+
+.image-upload > input
+{
+  display: none;
+}
+.image-upload > label{
+  cursor:pointer;
+}
