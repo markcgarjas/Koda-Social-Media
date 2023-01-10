@@ -1,0 +1,22 @@
+<h1>Find Friends</h1>
+<% @users&.each do |user| %>
+  <% unless current_user.friendships.where(friend_id: user.id).present? %>
+    <%= user.email %><br>
+    <%= button_to "Add Friend", { action: :create, controller: 'friend_requests', friend_id: user.id }, class: 'btn btn-dark', method: :post %>
+  <% end %>
+<% end %>
+<hr>
+<h1>Friend Request</h1>
+<% @friend_request.each do |incoming| %>
+  <%= incoming.user.email %>
+  <div class="d-flex">
+    <%= button_to "Accept", friend_request_path(incoming), class: 'btn btn-dark', method: :put %>
+    <%= button_to "Decline", friend_request_path(incoming), class: 'btn btn-dark mx-1', method: :delete %>
+  </div>
+<% end %>
+<hr>
+<h1>Sent Request</h1>
+<% @sent_request.each do |outgoing| %>
+  <%= outgoing.friend.email %>
+  <%= button_to "Cancel Request", friend_request_path(outgoing), class: 'btn btn-dark', method: :delete %>
+<% end %>

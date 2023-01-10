@@ -8,4 +8,6 @@ Rails.application.routes.draw do
     resources "comments", except: :show
   end
   resources "user_post_lists"
+  resources :friend_requests
+  resources :friends
 end
