@@ -1,0 +1,23 @@
+<%= form_with model: group, url: path do |form| %>
+  <div class="">
+    <div>
+      <%= form.label "Group Name", class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+    <div>
+      <%= form.label "Description", class: 'form-label' %>
+      <%= form.text_field :description, class: 'form-control' %>
+    </div>
+    <div>
+      <%= form.label "Banner", class: 'form-label' %>
+      <%= form.file_field :banner, class: 'form-control' %>
+    </div>
+    <div>
+      <%= form.label "Privacy", class: 'form-label' %>
+      <%= form.select :privacy, options_for_select(Group.privacies.map { |key, value| [key.humanize, key] }), { prompt: "Select Privacy" }, class: 'form-control mt-1 mb-1' %>
+    </div>
+    <div>
+      <%= form.submit class: 'form-control btn btn-dark mt-1' %>
+    </div>
+  </div>
+<% end %>

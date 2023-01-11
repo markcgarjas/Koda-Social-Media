@@ -1,0 +1,15 @@
+<h1>Groups</h1>
+<%= link_to "", new_group_path, class: 'bi bi-plus btn btn-large border mb-3' %>
+<% @groups.each do |group| %>
+  <div class="card">
+    <div class="card-body">
+      <div><%= group.privacy.titleize %></div>
+      <b><%= group.name %></b><br>
+      <%= group.description %>
+      <div><%= link_to "View Group Page", group_path(group), class: 'float-end btn btn-sm btn-dark' if group.user_groups.where(user: current_user).present? %></div>
+      <div>
+        <%= button_to "Join Group", { action: :join_group, controller: 'groups', group_id: group.id }, class: 'float-end btn btn-sm btn-dark', method: :post unless group.user_groups.where(user: current_user).present? %>
+      </div>
+    </div>
+  </div>
+<% end %>
