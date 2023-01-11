@@ -4,7 +4,11 @@ class FriendRequestsController < ApplicationController
   def index
     @friend_request = FriendRequest.where(friend: current_user)
     @sent_request = current_user.friend_requests
+<<<<<<< HEAD
     @users = User.where.not(id: [current_user.id] + @sent_request.pluck(:friend_id) + @friend_request.pluck(:user_id))
+=======
+    @users = User.where.not(id: [current_user.id] + @sent_request.pluck(:friend_id))
+>>>>>>> 1a7838686ab96aa700f10d6da558854792228663
   end
 
   def create

@@ -4,6 +4,8 @@
     <div class="d-flex">
       <div class="btn-group" role="group">
         <% if user_signed_in? %>
+          <%= link_to "Friends", friends_path, class: "btn btn-outline-light btn-floating m-1" %>
+          <%= link_to "Find Friends", friend_requests_path, class: "btn btn-outline-light btn-floating m-1" %>
           <%= link_to pundit_user.email, user_post_lists_path(post: 'public'), class: "btn btn-outline-light btn-floating m-1" %>
         <% end %>
         <div class="btn-group">
