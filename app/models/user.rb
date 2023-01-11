@@ -9,4 +9,6 @@ class User < ApplicationRecord
   has_many :pending_friends, through: :friend_requests, source: :friend
   has_many :friendships, dependent: :destroy
   has_many :friends, class_name: 'User', through: :friendships
+  has_many :user_groups
+  has_many :groups, class_name: 'User', through: :user_groups
 end

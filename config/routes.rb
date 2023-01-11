@@ -10,4 +10,8 @@ Rails.application.routes.draw do
   resources "user_post_lists"
   resources :friend_requests
   resources :friends
+  resources :groups do
+    post "join_group", to: "groups#join_group"
+    resources :user_groups
+  end
 end
