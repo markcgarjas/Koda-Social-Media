@@ -7,6 +7,7 @@ gem "devise"
 gem 'carrierwave', '>= 3.0.0.beta', '< 4.0'
 gem 'geocoder'
 gem 'pundit'
+gem 'aasm'
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.4"
 

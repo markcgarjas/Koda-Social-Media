@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :destroy, :edit, :update]
+  before_action :set_group, only: [:show, :destroy, :edit, :update, :cancel, :join_group]
 
   def index
     @groups = Group.all
@@ -15,13 +15,35 @@ class GroupsController < ApplicationController
 
   def join_group
     group = Group.find(params[:group_id])
-    @user = current_user.user_groups.new(group: group)
-    @user.role = :normal
-    if @user.save
+    @user = current_user.user_groups.find_by(group: group)
+    if @user
+      @user.pend!
       flash[:notice] = "successfully join!"
       redirect_to groups_path
     else
-      flash[:alert] = @user.errors.full_messages.join(", ")
+      @user_group = UserGroup.new
+      @user_group.user = current_user
+      @user_group.group = @group
+      @user_group.role = :normal
+      if @user_group.save
+        flash[:notice] = "successfully join!"
+        redirect_to groups_path
+      else
+        flash[:alert] = @user_group.errors.full_messages.join(", ")
+        redirect_to groups_path
+      end
+    end
+  end
+
+  def cancel
+    authorize @group, :cancel?, policy_class: GroupPolicy
+    if @group.user_groups.where(user: current_user).each do |user_group|
+      user_group.may_cancel? && user_group.cancel!
+    end
+      flash[:notice] = "Successfully Cancel"
+      redirect_to groups_path
+    else
+      flash[:notice] = @group.errors.full_messages.join(", ")
       redirect_to groups_path
     end
   end
@@ -72,6 +94,7 @@ class GroupsController < ApplicationController
   end
 
   def set_group
-    @group = Group.find(params[:id])
+    @group = Group.find(params[:id] || params[:group_id])
   end
+
 end

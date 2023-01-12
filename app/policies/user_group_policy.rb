@@ -16,4 +16,14 @@ class UserGroupPolicy < ApplicationPolicy
   def destroy?
     record.user_groups.admin.pluck(:user_id).include?(user.id)
   end
+
+  def approve?
+    record.user_groups.admin.pluck(:user_id).include?(user.id) ||
+      record.user_groups.moderator.pluck(:user_id).include?(user.id)
+  end
+
+  def decline?
+    record.user_groups.admin.pluck(:user_id).include?(user.id) ||
+      record.user_groups.moderator.pluck(:user_id).include?(user.id)
+  end
 end

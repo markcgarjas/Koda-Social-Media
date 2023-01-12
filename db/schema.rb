@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_09_095730) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_12_034633) do
   create_table "comments", charset: "utf8mb4", force: :cascade do |t|
     t.text "content"
     t.bigint "post_id"
@@ -39,6 +39,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_09_095730) do
     t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
+  create_table "groups", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "owner_id"
+    t.string "name"
+    t.integer "privacy"
+    t.string "description"
+    t.string "banner"
+    t.boolean "can_invite?"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_groups_on_owner_id"
+  end
+
   create_table "posts", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id"
     t.integer "audience"
@@ -48,6 +60,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_09_095730) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "user_groups", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "group_id"
+    t.integer "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "state"
+    t.index ["group_id"], name: "index_user_groups_on_group_id"
+    t.index ["user_id"], name: "index_user_groups_on_user_id"
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|

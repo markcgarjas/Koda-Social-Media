@@ -3,9 +3,10 @@
   <div class="card">
     <div class="card-body">
       <%= admin.user.email %><br>
-      <%= link_to "Edit", edit_group_user_group_path(@group, admin), class: 'btn btn-dark btn-sm' if UserGroupPolicy.new(current_user, @group).edit? %>
-      <%= button_to "Delete User", group_path(@group, admin),
-                    { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } if UserGroupPolicy.new(current_user, @group).destroy? %>
+      <div class="d-flex">
+        <%= link_to "Edit", edit_group_user_group_path(@group, admin), class: 'btn btn-dark btn-sm' if UserGroupPolicy.new(current_user, @group).edit? %>
+        <%= button_to "Delete User", group_path(@group, admin), { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn btn-dark btn-sm mx-1" } if UserGroupPolicy.new(current_user, @group).destroy? %>
+      </div>
     </div>
   </div>
 <% end %>
@@ -16,8 +17,7 @@
     <div class="card-body">
       <%= moderator.user.email %><br>
       <%= link_to "Edit", edit_group_user_group_path(@group, moderator), class: 'btn btn-dark btn-sm' if UserGroupPolicy.new(current_user, @group).edit? %>
-      <%= button_to "Delete User", group_path(@group, moderator),
-                    { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } if UserGroupPolicy.new(current_user, @group).destroy? %>
+      <%= button_to "Delete User", group_path(@group, moderator), { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn btn-dark btn-sm" } if UserGroupPolicy.new(current_user, @group).destroy? %>
     </div>
   </div>
 <% end %>
@@ -28,8 +28,20 @@
     <div class="card-body">
       <%= normal.user.email %><br>
       <%= link_to "Edit", edit_group_user_group_path(@group, normal), class: 'btn btn-dark btn-sm' if UserGroupPolicy.new(current_user, @group).edit? %>
-      <%= button_to "Delete User", group_user_group_path(@group, normal),
-                    { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } if UserGroupPolicy.new(current_user, @group).destroy? %>
+      <%= button_to "Delete User", group_user_group_path(@group, normal), { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } if UserGroupPolicy.new(current_user, @group).destroy? %>
+    </div>
+  </div>
+<% end %>
+<h1>Pending Members</h1>
+<% @pending_members.each do |pending_member| %>
+  <div class="card">
+    <div class="card-body">
+      <%= pending_member.user.email %><br>
+      <div class="d-flex">
+        <%= link_to "Edit", edit_group_user_group_path(@group, pending_member), class: 'btn btn-dark btn-sm' if UserGroupPolicy.new(current_user, @group).edit? %>
+        <%= button_to "Approve", group_user_group_approve_path(@group, pending_member), { method: :put, class: 'btn btn-dark btn-sm mx-1', onclick: "return confirm('Are you sure you want to approve?')" } if UserGroupPolicy.new(current_user, @group).approve? %>
+        <%= button_to "Decline", group_user_group_decline_path(@group, pending_member), { method: :delete, class: 'btn btn-dark btn-sm', onclick: "return confirm('Are you sure you want to decline?')" } if UserGroupPolicy.new(current_user, @group).decline? %>
+      </div>
     </div>
   </div>
 <% end %>

@@ -12,4 +12,8 @@ class GroupPolicy < ApplicationPolicy
   def update?
     edit?
   end
+
+  def cancel?
+    record.user_groups.pluck(:user_id).include?(user.id)
+  end
 end

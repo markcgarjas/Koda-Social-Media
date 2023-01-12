@@ -1,16 +1,40 @@
 class UserGroupsController < ApplicationController
-  before_action :set_group_user, only: [:edit, :update, :destroy]
+  before_action :set_group_user, only: [:edit, :update, :destroy, :approve, :decline]
   before_action :set_group
 
   def show
     authorize @group, :show?, policy_class: UserGroupPolicy
     @admins = @group.user_groups.admin
     @moderators = @group.user_groups.moderator
-    @normal_users = @group.user_groups.normal
+    @normal_users = @group.user_groups.normal.approved
+    @pending_members = @group.user_groups.normal.pending
   end
 
   def edit
     authorize @group, :edit?, policy_class: UserGroupPolicy
+  end
+
+  def approve
+    authorize @group, :approve?, policy_class: UserGroupPolicy
+    if @user_group.may_approve? && @user_group.approve!
+      flash[:notice] = "Successfully Accept"
+      redirect_to group_user_group_path(@group, @user_group)
+    else
+      flash[:notice] = @group.errors.full_messages.join(", ")
+      redirect_to group_user_group_path(@group, @user_group)
+    end
+  end
+
+  def decline
+    authorize @group, :decline?, policy_class: UserGroupPolicy
+
+    if @user_group.may_decline? && @user_group.decline!
+      flash[:notice] = "Successfully Decline"
+      redirect_to group_user_group_path(@group, @user_group)
+    else
+      flash[:notice] = @group.errors.full_messages.join(", ")
+      redirect_to group_user_group_path(@group, @user_group)
+    end
   end
 
   def update
@@ -30,7 +54,7 @@ class UserGroupsController < ApplicationController
   private
 
   def set_group_user
-    @user_group = UserGroup.find(params[:id])
+    @user_group = UserGroup.find(params[:id] || params[:user_group_id])
   end
 
   def set_group

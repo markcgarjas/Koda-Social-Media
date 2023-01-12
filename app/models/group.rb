@@ -11,7 +11,7 @@ class Group < ApplicationRecord
   mount_uploader :banner, ImageUploader
 
   def default_admin
-    UserGroup.create!(role: :admin, group: self, user: owner)
+    UserGroup.create!(role: :admin, group: self, user: owner, state: :approved)
   end
 
   def enable_invite
