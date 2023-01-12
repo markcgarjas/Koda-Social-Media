@@ -1,9 +1,11 @@
 class PostsController < ApplicationController
+  Pundit::Authorization
+  after_action :verify_authorized, except: [:index, :create, :show]
   before_action :set_post, only: [:edit, :show, :update, :destroy]
-  before_action :authenticate_user!, except: [:index]
+  before_action :authenticate_user!, except: :index
 
   def index
-    @posts = Post.all
+    @posts = current_user.posts.or(Post.public_post).or(Post.where(user: current_user.friends).friends_only) if current_user
     @post = Post.new
   end
 
@@ -28,7 +30,9 @@ class PostsController < ApplicationController
     authorize @post, :edit?, policy_class: PostPolicy
   end
 
-  def show; end
+  def show
+    authorize @post, :show?, policy_class: PostPolicy
+  end
 
   def update
     authorize @post, :update?, policy_class: PostPolicy

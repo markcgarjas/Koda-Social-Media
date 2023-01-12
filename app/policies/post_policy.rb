@@ -1,13 +1,17 @@
 class PostPolicy < ApplicationPolicy
-  def current_user?
+  def show?
+    record.user == user || record.public_post? || (record.friends_only? && record.user.friends.include?(user))
+  end
+
+  def edit?
     record.user == user
   end
 
   def update?
-    current_user?
+    edit?
   end
 
   def destroy?
-    current_user?
+    record.user == user
   end
 end

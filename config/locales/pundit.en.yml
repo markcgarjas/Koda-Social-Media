@@ -1,3 +1,20 @@
 en:
   pundit:
     default: You are not authorized to perform this action
+    post_policy:
+      edit?: you are not authorized to edit this post
+      update?: you are not authorized to edit this post
+      destroy?: you are not authorized to delete this post
+      show?: you are not authorized to view this post
+    comment_policy:
+      edit?: you are not authorized to edit this comment
+      update?: you are not authorized to edit this comment
+      destroy?: you are not authorized to delete this comment
+    user_group_policy:
+      edit?: you are not authorized to edit this member
+      show?: you are not authorized to view this group
+    group_policy:
+      show?: you are not authorized to view this group
+      edit?: you are not authorized to edit this group
+      update?: you are not authorized to update this group
+      destroy?: you are not authorized to destroy this group
