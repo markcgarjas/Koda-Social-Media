@@ -6,8 +6,9 @@ class UserGroupsController < ApplicationController
     authorize @group, :show?, policy_class: UserGroupPolicy
     @admins = @group.user_groups.admin
     @moderators = @group.user_groups.moderator
-    @normal_users = @group.user_groups.normal.approved
+    @normal_users = @group.user_groups.normal.approved.or(@group.user_groups.normal.accepted)
     @pending_members = @group.user_groups.normal.pending
+    @invited_members = @group.user_groups.normal.invited
   end
 
   def edit

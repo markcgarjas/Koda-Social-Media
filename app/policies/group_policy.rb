@@ -16,4 +16,12 @@ class GroupPolicy < ApplicationPolicy
   def cancel?
     record.user_groups.pluck(:user_id).include?(user.id)
   end
+
+  def accept?
+    record.user_groups.pluck(:user_id).include?(user.id)
+  end
+
+  def delete?
+    record.user_groups.pluck(:user_id).include?(user.id)
+  end
 end

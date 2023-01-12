@@ -6,10 +6,12 @@
       <div><%= group.privacy.titleize %></div>
       <b><%= group.name %></b><br>
       <%= group.description %>
-      <div><%= link_to "View Group Page", group_path(group), class: 'float-end btn btn-sm btn-dark' if group.user_groups.where(user: current_user).approved.exists? %></div>
+      <div><%= link_to "View Group Page", group_path(group), class: 'float-end btn btn-sm btn-dark' if group.user_groups.where(user: current_user).approved.exists? || group.user_groups.where(user: current_user).accepted.exists? %></div>
       <div><%= button_to "Cancel", group_cancel_path(group), class: 'float-end btn btn-sm btn-dark', method: :put if group.user_groups.where(user: current_user).pending.exists? && GroupPolicy.new(current_user, group).cancel? %></div>
+      <div><%= button_to "Delete Invitation", group_delete_path(group), class: 'float-end btn btn-sm btn-dark mx-1', method: :put if group.user_groups.where(user: current_user).invited.exists? %></div>
+      <div><%= button_to "Accept Invitation", group_accept_path(group), class: 'float-end btn btn-sm btn-dark', method: :put if group.user_groups.where(user: current_user).invited.exists? %></div>
       <div>
-        <%= button_to "Join Group", { action: :join_group, controller: 'groups', group_id: group.id }, class: 'float-end btn btn-sm btn-dark', method: :post if group.user_groups.where(user: current_user).cancelled.exists? || group.user_groups.where(user: current_user).declined.exists? || !group.user_groups.where(user: current_user).exists? %>
+        <%= button_to "Join Group", { action: :join_group, controller: 'groups', group_id: group.id }, class: 'float-end btn btn-sm btn-dark', method: :post if group.user_groups.where(user: current_user).cancelled.exists? || group.user_groups.where(user: current_user).declined.exists? || !group.user_groups.where(user: current_user).exists? || group.user_groups.where(user: current_user).deleted.exists? %>
       </div>
     </div>
   </div>

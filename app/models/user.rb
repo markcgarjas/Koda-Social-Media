@@ -11,4 +11,6 @@ class User < ApplicationRecord
   has_many :friends, class_name: 'User', through: :friendships
   has_many :user_groups
   has_many :groups, class_name: 'User', through: :user_groups
+  has_many :users
+  has_many :inviters, class_name: 'User', through: :user_groups
 end

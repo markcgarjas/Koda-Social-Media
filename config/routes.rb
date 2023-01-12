@@ -12,7 +12,10 @@ Rails.application.routes.draw do
   resources :friends
   resources :groups do
     post "join_group", to: "groups#join_group"
+    post "inviter_user/:user_id",as: "invite_user", to: "groups#invite_user"
     put "cancel", to: "groups#cancel"
+    put "accept", to: "groups#accept"
+    put "delete", to: "groups#delete"
     resources :user_groups do
       put "approve", to: "user_groups#approve"
       delete "decline", to: "user_groups#decline"

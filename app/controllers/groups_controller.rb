@@ -1,5 +1,6 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :destroy, :edit, :update, :cancel, :join_group]
+  before_action :set_group, except: [:index, :new, :create]
+  before_action :set_user, only: :invite_user
 
   def index
     @groups = Group.all
@@ -11,13 +12,36 @@ class GroupsController < ApplicationController
 
   def show
     authorize @group, :show?, policy_class: GroupPolicy
+    @friend_lists = current_user.friends.where.not(id: @group.user_groups.where(state: [:pending, :approved, :invited, :accepted]).pluck(:user_id))
+  end
+
+  def invite_user
+    @user_group = @user.user_groups.find_by(group: @group)
+    if @user_group
+      @user_group.inviter = current_user
+      @user_group.state = :invited
+      flash[:notice] = "successfully invited!"
+      redirect_to groups_path
+    else
+      @user_group = UserGroup.new
+      @user_group.user = @user
+      @user_group.group = @group
+      @user_group.role = :normal
+      @user_group.state = :invited
+      @user_group.inviter = current_user
+      if @user_group.save
+        flash[:notice] = "successfully invited!"
+        redirect_to groups_path
+      else
+        flash[:alert] = @user_group.errors.full_messages.join(", ")
+        redirect_to groups_path
+      end
+    end
   end
 
   def join_group
-    group = Group.find(params[:group_id])
-    @user = current_user.user_groups.find_by(group: group)
-    if @user
-      @user.pend!
+    @user_group = current_user.user_groups.find_by(group: @group)
+    if @user_group && @user_group.pend!
       flash[:notice] = "successfully join!"
       redirect_to groups_path
     else
@@ -41,6 +65,32 @@ class GroupsController < ApplicationController
       user_group.may_cancel? && user_group.cancel!
     end
       flash[:notice] = "Successfully Cancel"
+      redirect_to groups_path
+    else
+      flash[:notice] = @group.errors.full_messages.join(", ")
+      redirect_to groups_path
+    end
+  end
+
+  def accept
+    authorize @group, :accept?, policy_class: GroupPolicy
+    if @group.user_groups.where(user: current_user).each do |user_group|
+      user_group.may_accept? && user_group.accept!
+    end
+      flash[:notice] = "Successfully Accept Invitation"
+      redirect_to groups_path
+    else
+      flash[:notice] = @group.errors.full_messages.join(", ")
+      redirect_to groups_path
+    end
+  end
+
+  def delete
+    authorize @group, :delete?, policy_class: GroupPolicy
+    if @group.user_groups.where(user: current_user).each do |user_group|
+      user_group.may_delete? && user_group.delete!
+    end
+      flash[:notice] = "Successfully Delete Invitation"
       redirect_to groups_path
     else
       flash[:notice] = @group.errors.full_messages.join(", ")
@@ -73,7 +123,6 @@ class GroupsController < ApplicationController
       flash[:notice] = @group.errors.full_messages.join(", ")
       redirect_to groups_path(@group)
     end
-
   end
 
   def destroy
@@ -97,4 +146,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id] || params[:group_id])
   end
 
+  def set_user
+    @user = User.find(params[:user_id])
+  end
 end
