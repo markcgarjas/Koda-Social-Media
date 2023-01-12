@@ -43,8 +43,8 @@
   <button type="button" class="btn border border-1 btn-sm bi-three-dots" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
   </button>
   <ul class="dropdown-menu dropdown-menu-end dropdown-menu">
-    <%= link_to "Edit Group", edit_group_path(@group), class: "btn-sm btn bi bi-pen dropdown-item" %>
-    <%= button_to "Delete Group", group_path(@group), { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } %>
+    <%= link_to "Edit Group", edit_group_path(@group), class: "btn-sm btn bi bi-pen dropdown-item" if GroupPolicy.new(current_user, @group).edit? %>
+    <%= button_to "Delete Group", group_path(@group), { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } if GroupPolicy.new(current_user, @group).destroy? %>
   </ul>
 </div>
 <hr>

@@ -6,7 +6,8 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def edit?
-    record.user_groups.admin.pluck(:user_id).include?(user.id)
+    record.user_groups.admin.pluck(:user_id).include?(user.id) ||
+      record.user_groups.moderator.pluck(:user_id).include?(user.id)
   end
 
   def update?
@@ -23,5 +24,9 @@ class GroupPolicy < ApplicationPolicy
 
   def delete?
     record.user_groups.pluck(:user_id).include?(user.id)
+  end
+
+  def destroy?
+    record.user_groups.admin.pluck(:user_id).include?(user.id)
   end
 end
