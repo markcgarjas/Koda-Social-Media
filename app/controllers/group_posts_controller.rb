@@ -48,6 +48,28 @@ class GroupPostsController < ApplicationController
     end
   end
 
+  def publish
+    authorize @group_post, :publish?, policy_class: GroupPostPolicy
+    if @group_post.may_publish? && @group_post.publish!
+      flash[:notice] = "The group post published successfully"
+      redirect_to group_path(@group)
+    else
+      flash[:alert] = @group_post.errors.full_messages.join(", ")
+      redirect_to group_path(@group)
+    end
+  end
+
+  def remove
+    authorize @group_post, :remove?, policy_class: GroupPostPolicy
+    if @group_post.may_remove? && @group_post.remove!
+      flash[:notice] = "The group post remove successfully"
+      redirect_to group_path(@group)
+    else
+      flash[:alert] = @group_post.errors.full_messages.join(", ")
+      redirect_to group_path(@group)
+    end
+  end
+
   private
 
   def set_group
@@ -55,7 +77,7 @@ class GroupPostsController < ApplicationController
   end
 
   def set_group_post
-    @group_post = GroupPost.find(params[:id])
+    @group_post = GroupPost.find(params[:id] || params[:group_post_id])
   end
 
   def params_group_post

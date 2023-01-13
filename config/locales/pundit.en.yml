@@ -26,3 +26,5 @@ en:
       edit?: you are not authorized to edit this group post
       update?: you are not authorized to update this group post
       destroy?: you are not authorized to destroy this group post
+      publish?: you are not authorized to publish this group post
+      remove?: you are not authorized to remove this group post

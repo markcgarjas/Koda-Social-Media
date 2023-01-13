@@ -58,3 +58,16 @@
     </div>
   </div>
 <% end %>
+<hr>
+<h1>Pending Post</h1>
+<% @pending_posts.each do |pending_post| %>
+  <div class="card">
+    <div class="card-body">
+      <%= pending_post.content %><br>
+      <%= button_to "Publish", group_group_post_publish_path(@group, pending_post), { method: :put, class: 'btn btn-dark btn-sm mx-1', onclick: "return confirm('Are you sure you want to publish?')" } %>
+      <%= button_to "Remove", group_group_post_remove_path(@group, pending_post), { method: :put, class: 'btn btn-dark btn-sm', onclick: "return confirm('Are you sure you want to remove?')" } %>
+      <div class="d-flex">
+      </div>
+    </div>
+  </div>
+<% end %>

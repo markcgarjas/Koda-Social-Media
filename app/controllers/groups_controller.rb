@@ -13,7 +13,7 @@ class GroupsController < ApplicationController
   def show
     @group_post = GroupPost.new
     authorize @group, :show?, policy_class: GroupPolicy
-    @group_posts = @group.group_posts
+    @group_posts = @group.group_posts.published
     @friend_lists = current_user.friends.where.not(id: @group.user_groups.where(state: [:pending, :approved, :invited, :accepted]).pluck(:user_id))
   end
 
@@ -49,6 +49,7 @@ class GroupsController < ApplicationController
     else
       @user_group = UserGroup.new
       @user_group.user = current_user
+      @user_group.role = :normal
       @user_group.group = @group
       if @user_group.save
         flash[:notice] = "successfully join!"

@@ -1,6 +1,7 @@
 class UserGroupsController < ApplicationController
   before_action :set_group_user, only: [:edit, :update, :destroy, :approve, :decline]
   before_action :set_group
+  before_action :set_group_post, only: [:publish, :remove]
 
   def show
     authorize @group, :show?, policy_class: UserGroupPolicy
@@ -9,6 +10,7 @@ class UserGroupsController < ApplicationController
     @normal_users = @group.user_groups.normal.approved.or(@group.user_groups.normal.accepted)
     @pending_members = @group.user_groups.pending
     @invited_members = @group.user_groups.invited
+    @pending_posts = @group.group_posts.pending
   end
 
   def edit
@@ -28,7 +30,6 @@ class UserGroupsController < ApplicationController
 
   def decline
     authorize @group, :decline?, policy_class: UserGroupPolicy
-
     if @user_group.may_decline? && @user_group.decline!
       flash[:notice] = "Successfully Decline"
       redirect_to group_user_group_path(@group, @user_group)
@@ -60,6 +61,10 @@ class UserGroupsController < ApplicationController
 
   def set_group
     @group = Group.find(params[:group_id])
+  end
+
+  def set_group_post
+    @group_post = GroupPost.find(params[:id] || params[:group_post_id])
   end
 
   def group_user_params

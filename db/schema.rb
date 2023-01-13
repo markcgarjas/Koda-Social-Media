@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_13_024756) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_13_081629) do
   create_table "comments", charset: "utf8mb4", force: :cascade do |t|
     t.text "content"
     t.bigint "post_id"
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_13_024756) do
     t.string "location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "state"
     t.index ["group_id"], name: "index_group_posts_on_group_id"
     t.index ["user_group_id"], name: "index_group_posts_on_user_group_id"
   end

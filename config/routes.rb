@@ -20,6 +20,9 @@ Rails.application.routes.draw do
       put "approve", to: "user_groups#approve"
       delete "decline", to: "user_groups#decline"
     end
-    resources :group_posts
+    resources :group_posts do
+      put "publish", to: "group_posts#publish"
+      put "remove", to: "group_posts#remove"
+    end
   end
 end
