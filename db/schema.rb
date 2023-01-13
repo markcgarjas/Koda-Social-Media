@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_12_081700) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_13_024756) do
   create_table "comments", charset: "utf8mb4", force: :cascade do |t|
     t.text "content"
     t.bigint "post_id"
@@ -37,6 +37,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_081700) do
     t.datetime "updated_at", null: false
     t.index ["friend_id"], name: "index_friendships_on_friend_id"
     t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
+
+  create_table "group_posts", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "group_id"
+    t.bigint "user_group_id"
+    t.string "content"
+    t.string "image"
+    t.string "location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_posts_on_group_id"
+    t.index ["user_group_id"], name: "index_group_posts_on_user_group_id"
   end
 
   create_table "groups", charset: "utf8mb4", force: :cascade do |t|

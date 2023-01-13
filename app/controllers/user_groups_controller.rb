@@ -7,8 +7,8 @@ class UserGroupsController < ApplicationController
     @admins = @group.user_groups.admin
     @moderators = @group.user_groups.moderator
     @normal_users = @group.user_groups.normal.approved.or(@group.user_groups.normal.accepted)
-    @pending_members = @group.user_groups.normal.pending
-    @invited_members = @group.user_groups.normal.invited
+    @pending_members = @group.user_groups.pending
+    @invited_members = @group.user_groups.invited
   end
 
   def edit

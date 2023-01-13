@@ -21,3 +21,8 @@ en:
       update?: you are not authorized to update this group
       destroy?: you are not authorized to destroy this group
       cancel?: you are not authorized to cancel this request
+    group_post_policy:
+      show?: you are not authorized to view this group post
+      edit?: you are not authorized to edit this group post
+      update?: you are not authorized to update this group post
+      destroy?: you are not authorized to destroy this group post

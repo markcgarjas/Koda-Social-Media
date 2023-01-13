@@ -1,0 +1,17 @@
+<section class="mt-5 mt-sm-5 mt-md-5 mt-lg-5 mt-xl-5 mt-xxl-5 mb-5">
+  <div class="container text-center" style="width: 40%;">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+        <div class="card-header">
+          <h1 class="text-center border bg-warning p-2">Edit Group Post</h1>
+        </div>
+        <div class="card shadow-lg rounded-3">
+          <div class="card-body bg-light">
+            <%= render partial: 'group_posts/form_group_new', locals: { group_post: @group_post, path: group_group_post_path(@group) } %>
+            <%= link_to "Back", group_path(@group), class: "btn btn-warning mt-2" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

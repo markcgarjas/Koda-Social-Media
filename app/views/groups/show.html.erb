@@ -2,6 +2,7 @@
 <%= @group.description %><br>
 <%= @group.privacy %>
 <div class="btn-group float-end">
+  <%= link_to "Member List", group_user_group_path(@group), class: 'btn btn-dark btn-sm' %>
   <div class="text-center">
     <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
       <span>Invite</span>
@@ -48,4 +49,63 @@
   </ul>
 </div>
 <hr>
-<%= link_to "Member List", group_user_group_path(@group), class: 'btn btn-dark' %>
+<% if user_signed_in? %>
+  <div class="text-center" style="width: 100%;">
+    <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#exampleModal<%= @group.id %>">
+      <%= "Whats on your mind,#{pundit_user.email}" %>
+    </button>
+  </div>
+  <div class="modal fade" id="exampleModal<%= @group.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <section class="mt-5 mt-sm-5 mt-md-5 mt-lg-5 mt-xl-5 mt-xxl-5 mb-5">
+            <div class="container text-center">
+              <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                  <div class="card-header">
+                    <h1 class="text-center border bg-warning p-2">Create Group Post</h1>
+                  </div>
+                  <div class="card shadow-lg rounded-3">
+                    <div class="card-body bg-light">
+                      <%= render partial: 'group_posts/form_group_new', locals: { group_post: @group_post, path: group_group_posts_path(@group) } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<% @group_posts.each do |group_post| %>
+  <div class="card shadow-lg rounded-3 mt-2">
+    <div class="card-body bg-light">
+      <div class="btn-group float-end">
+        <button type="button" class="btn border border-1 btn-sm bi-three-dots" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu">
+          <%= link_to "Show Post", group_group_post_path(@group, group_post), class: 'bi bi-eye btn-sm btn dropdown-item' %>
+          <%= link_to "Edit Post", edit_group_group_post_path(@group, group_post), class: 'bi bi-pen btn-sm btn dropdown-item' %>
+          <%= button_to "Delete Post", group_group_post_path(@group, group_post), { onclick: "return confirm('Are you sure you want to delete?')", method: :delete, class: "btn-sm btn bi bi-trash3-fill dropdown-item" } %>
+        </ul>
+      </div>
+      <div>
+        <%= group_post.user_group&.user&.email %><br>
+        <span><%= time_ago_in_words(group_post.created_at) %> ago</span>
+        <% if group_post.location? %>
+          <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= Geocoder.search(group_post.location).first&.city %> <%= Geocoder.search(group_post.location).first&.region %>, <%= Geocoder.search(group_post.location).first&.country %>">
+          <span class="bi bi-geo-alt-fill"></span>
+          </span>
+        <% end %>
+      </div>
+      <hr>
+      <h4 class="text-success"><%= group_post.content %></h4>
+      <div class="text-center">
+        <%= image_tag group_post.image.url, class: 'w-100', height: "400" if group_post.image? %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -7,6 +7,7 @@ class Group < ApplicationRecord
   belongs_to :owner, class_name: 'User'
   has_many :user_groups
   has_many :users, class_name: 'User', through: :user_groups
+  has_many :group_posts
   enum privacy: { public_group: 0, hidden_group: 1 }
   mount_uploader :banner, ImageUploader
 

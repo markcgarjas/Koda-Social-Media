@@ -4,6 +4,7 @@ class UserGroup < ApplicationRecord
   belongs_to :user
   belongs_to :group
   belongs_to :inviter, class_name: 'User', optional: true
+  has_many :group_posts
   enum role: { admin: 1, moderator: 2, normal: 3 }
   validates :user, presence: true, uniqueness: { scope: :group }
 
