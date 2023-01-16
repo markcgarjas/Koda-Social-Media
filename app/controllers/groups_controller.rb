@@ -3,7 +3,9 @@ class GroupsController < ApplicationController
   before_action :set_user, only: :invite_user
 
   def index
-    @groups = Group.all
+    @groups = Group.public_group if params[:group] == 'public'
+    @join_groups = Group.includes(:user_groups).where(user_groups: { state: [:accepted, :approved], user: current_user }).or(Group.where(owner: current_user)) if params[:group] == 'join'
+    @group_invitations = Group.includes(:user_groups).where(user_groups: { state: :invited, user: current_user }) if params[:group] == 'invitation'
   end
 
   def new

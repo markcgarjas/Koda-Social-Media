@@ -1,6 +1,43 @@
-<h1>Groups</h1>
 <%= link_to "", new_group_path, class: 'bi bi-plus btn btn-large border mb-3' %>
-<% @groups.each do |group| %>
+<%= link_to "All Groups", groups_path(group: :public), class: "btn btn-large border btn-outline-warning mb-3" if params[:group] == 'public' %>
+<%= link_to "All Groups", groups_path(group: :public), class: "btn btn-large border btn-outline-dark mb-3" unless params[:group] == 'public' %>
+<%= link_to "Joined Groups", groups_path(group: :join), class: "btn btn-large border btn-outline-warning mb-3" if params[:group] == 'join' %>
+<%= link_to "Joined Groups", groups_path(group: :join), class: "btn btn-large border btn-outline-dark mb-3" unless params[:group] == 'join' %>
+<%= link_to "Group Invitations", groups_path(group: :invited), class: "btn btn-large border btn-outline-warning mb-3" if params[:group] == 'invited' %>
+<%= link_to "Group Invitations", groups_path(group: :invited), class: "btn btn-large border btn-outline-dark mb-3" unless params[:group] == 'invited' %>
+<% @groups&.each do |group| %>
+  <div class="card">
+    <div class="card-body">
+      <div><%= group.privacy.titleize %></div>
+      <b><%= group.name %></b><br>
+      <%= group.description %>
+      <div><%= link_to "View Group Page", group_path(group), class: 'float-end btn btn-sm btn-dark' if group.user_groups.where(user: current_user).approved.exists? || group.user_groups.where(user: current_user).accepted.exists? %></div>
+      <div><%= button_to "Cancel", group_cancel_path(group), class: 'float-end btn btn-sm btn-dark', method: :put if group.user_groups.where(user: current_user).pending.exists? && GroupPolicy.new(current_user, group).cancel? %></div>
+      <div><%= button_to "Delete Invitation", group_delete_path(group), class: 'float-end btn btn-sm btn-dark mx-1', method: :put if group.user_groups.where(user: current_user).invited.exists? %></div>
+      <div><%= button_to "Accept Invitation", group_accept_path(group), class: 'float-end btn btn-sm btn-dark', method: :put if group.user_groups.where(user: current_user).invited.exists? %></div>
+      <div>
+        <%= button_to "Join Group", { action: :join_group, controller: 'groups', group_id: group.id }, class: 'float-end btn btn-sm btn-dark', method: :post if group.user_groups.where(user: current_user).cancelled.exists? || group.user_groups.where(user: current_user).declined.exists? || !group.user_groups.where(user: current_user).exists? || group.user_groups.where(user: current_user).deleted.exists? %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<% @join_groups&.each do |group| %>
+  <div class="card">
+    <div class="card-body">
+      <div><%= group.privacy.titleize %></div>
+      <b><%= group.name %></b><br>
+      <%= group.description %>
+      <div><%= link_to "View Group Page", group_path(group), class: 'float-end btn btn-sm btn-dark' if group.user_groups.where(user: current_user).approved.exists? || group.user_groups.where(user: current_user).accepted.exists? %></div>
+      <div><%= button_to "Cancel", group_cancel_path(group), class: 'float-end btn btn-sm btn-dark', method: :put if group.user_groups.where(user: current_user).pending.exists? && GroupPolicy.new(current_user, group).cancel? %></div>
+      <div><%= button_to "Delete Invitation", group_delete_path(group), class: 'float-end btn btn-sm btn-dark mx-1', method: :put if group.user_groups.where(user: current_user).invited.exists? %></div>
+      <div><%= button_to "Accept Invitation", group_accept_path(group), class: 'float-end btn btn-sm btn-dark', method: :put if group.user_groups.where(user: current_user).invited.exists? %></div>
+      <div>
+        <%= button_to "Join Group", { action: :join_group, controller: 'groups', group_id: group.id }, class: 'float-end btn btn-sm btn-dark', method: :post if group.user_groups.where(user: current_user).cancelled.exists? || group.user_groups.where(user: current_user).declined.exists? || !group.user_groups.where(user: current_user).exists? || group.user_groups.where(user: current_user).deleted.exists? %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<% @group_invitations&.each do |group| %>
   <div class="card">
     <div class="card-body">
       <div><%= group.privacy.titleize %></div>

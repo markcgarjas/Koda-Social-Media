@@ -98,7 +98,7 @@
         <%= group_post.user_group&.user&.email %><br>
         <span><%= time_ago_in_words(group_post.created_at) %> ago</span>
         <% if group_post.location? %>
-          <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= Geocoder.search(group_post.location).first&.city %> <%= Geocoder.search(group_post.location).first&.region %>, <%= Geocoder.search(group_post.location).first&.country %>">
+<!--          <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%#= Geocoder.search(group_post.location).first&.city %> <%#= Geocoder.search(group_post.location).first&.region %>, <%#= Geocoder.search(group_post.location).first&.country %>">-->
           <span class="bi bi-geo-alt-fill"></span>
           </span>
         <% end %>
